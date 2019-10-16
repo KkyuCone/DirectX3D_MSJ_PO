@@ -1,0 +1,707 @@
+
+/////////////////////////////////////////////////////////// 버텍스셰이더
+// 색상값, 위치값 ( 입력, 출력)
+struct VS_INPUT_COLOR
+{
+    float3 vPos : POSITION;
+    float4 vColor : COLOR;
+};
+
+struct VS_OUTPUT_COLOR
+{
+    float4 vPos : SV_POSITION;
+    float4 vColor : COLOR;
+};
+
+// 위치, 노멀, 색상 (입력, 출력)
+struct VS_INPUT_NORMAL_COLOR
+{
+    float3 vPos     : POSITION;
+    float3 vNormal  : NORMAL;
+    float4 vColor   : COLOR;
+};
+
+struct VS_OUTPUT_NORMAL_COLOR
+{
+    float4 vPos         : SV_POSITION;
+    float3 vNormal      : NORMAL;
+    float4 vColor       : COLOR;
+    float3 vViewPos     : POSITION;             // 뷰공간의 z값와 w값이 같으므로 w 그냥 하나 빼줬다 ㅇㅅㅇ
+    float4 vProjPos     : POSITION1;
+};
+
+struct VS_INPUT_3D
+{
+    float3 vPos     : POSITION;
+    float3 vNormal  : NORMAL;
+    float2 vUV      : TEXCOORD;
+    float3 vTangent : TANGENT;
+    float3 vBinormal : BINORMAL;
+    float4 vWeights : BLENDWEIGHTS;
+    float4 vIndices : BLENDINDICES;
+};
+
+struct VS_OUTPUT_3D
+{
+    float4 vPos : SV_POSITION;
+    float3 vNormal : NORMAL;
+    float2 vUV : TEXCOORD;
+    float3 vTangent : TANGENT;
+    float3 vBinormal : BINORMAL;
+    float3 vViewPos : POSITION;
+    float4 vProjPos : POSITION1;
+};
+
+struct VS_INPUT3D_INSTANCING
+{
+    float3 vPos         : POSITION;
+    float3 vNormal      : NORMAL;
+    float2 vUV          : TEXCOORD;
+    float3 vTangent     : TANGENT;
+    float3 vBinormal    : BINORMAL;
+    float4 vWeights     : BLENDWEIGHTS;
+    float4 vIndices     : BLENDINDICES;
+    matrix matWVP       : WORLD;
+    matrix matWV        : WORLDVIEW;
+    matrix matWVRot     : WORLDVIEWROT;
+};
+
+struct VS_OUTPUT3D_INSTANCING
+{
+    float4 vPos         : SV_POSITION;
+    float3 vNormal      : NORMAL;
+    float2 vUV          : TEXCOORD;
+    float3 vTangent     : TANGENT;
+    float3 vBinormal    : BINORMAL;
+    float3 vViewPos     : POSITION;
+    float4 vProjPos     : POSITION1;
+    matrix matWVP       : WORLD;
+    matrix matWV        : WORLDVIEW;
+    matrix matWVRot     : WORLDVIEWROT;
+};
+
+struct VS_INPUT_POSITION
+{
+    float3 vPos : POSITION;
+};
+
+struct VS_OUTPUT_POSITION
+{
+    float4 vPos : SV_POSITION;
+};
+
+//
+
+struct VS_OUTPUT_SKY
+{
+    float4 vPos : SV_POSITION;
+    float3 vUV : TEXCOORD;
+};
+
+struct VS_INPUT_UV
+{
+    float3 vPos : POSITION;
+    float2 vUV : TEXCOORD;
+};
+
+struct VS_OUTPUT_UV
+{
+    float4 vPos : SV_POSITION;
+    float2 vUV : TEXCOORD;
+};
+
+
+/////////////////////////////////////////////////////////////// 픽셀셰이더
+
+struct PS_OUTPUT
+{
+    float4 vColor : SV_TARGET;
+};
+
+struct PS_OUTPUT_GBUFFER
+{
+    float4 vAlbedo      : SV_TARGET;
+    float4 vNormal      : SV_TARGET1;
+    float4 vDepth       : SV_TARGET2;
+    float4 vMaterial    : SV_TARGET3;
+};
+
+
+/////////////////////////////////////////////////////////////// 상수버퍼
+
+cbuffer Transform : register(b0)
+{
+    matrix g_WRot;    // WorldRotationMatrix;	// 월드 회전행렬 
+    matrix g_WVRot;   // WorldViewRotation
+    matrix g_W;
+    matrix g_V;
+    matrix g_InvV;
+    matrix g_Proj;
+    matrix g_InvProj;
+    matrix g_WV;
+    matrix g_WVP;
+    matrix g_VP;        // 빌보드 사용시 필요 
+}
+
+cbuffer Material : register(b1)
+{
+    float4  g_vMaterialDiffuse;
+    float4  g_vMaterialAmbient;
+    float4  g_vMaterialSpecurlar;
+    float4  g_vMaterialEmissive;
+    int     g_iMaterialNormal;
+    int     g_iMaterialSpecular;
+    int     g_iSkinning;                    // 애니메이션 유무 (1, 0)
+    float   g_vMaterialEmpty;
+}
+
+cbuffer Light : register(b2)
+{
+    matrix g_vShadowLightVP;
+    matrix g_vInvCamView;
+    float4  g_vLightDiffuse;
+    float4  g_vLightAmbient;
+    float4  g_vLightSpecualr;
+    float3  g_vLightPosition;
+    int     g_iLightType;
+    float3  g_vLightDir;
+    float   g_fLightDistance;
+    float   g_fLightInAngle;
+    float   g_fLightOutAngle;
+    float2  g_vLightEmtpy;
+}
+
+// 렌더모드
+#define RENDER_FORWARD  0
+#define RENDER_DEFERRED 1
+
+cbuffer Rendering : register(b3)
+{
+    int     g_iRenderMode;
+    float3  g_vRenderEmtpy;         // 얜 그냥 16바이트 맞추려고 넣어준거
+}
+
+// 2D 애니메이션 관련 - ComputeFrameUV(float2 _vUV)
+#define AFT_ATLAS   0
+#define AFT_FRAME   1
+
+cbuffer AnimationFrame : register(b8)
+{
+    int     g_iAniFrameType;
+    int     g_iAniFrameOption;
+    float2  g_vAniFrameTextureSize;
+    float2  g_vAniFrameStart;
+    float2  g_vAniFrameEnd;
+    int     g_iAniFrameFrame;
+    float3  g_vAniFrameEmpty;
+}
+
+
+//////////////////////////////////////////////////////////
+
+Texture2D g_DiffuseTexture  : register(t0);
+Texture2D g_NormalTexture   : register(t1);
+Texture2D g_SpecularTexture : register(t2);
+Texture2D g_BoneTexture     : register(t3);         // 스키닝을 위한 애니메이션 본행렬 정보들을 VTF방식으로 넣어줄거임
+
+Texture2D g_ShadowTex : register(t9);
+
+SamplerState g_LinearSampler    : register(s0);      // 선형 샘플러
+SamplerState g_PointSampler     : register(s1);      // 포인트 샘플러
+SamplerState g_WrapSampler      : register(s2);     // Wrap샘플러
+SamplerState g_ClampSampler     : register(s3);     // 클램프 샘플러
+SamplerState g_ShadowSampler : register(s4); // 쉐도우 샘플러
+
+VS_OUTPUT_COLOR VS_StandardVertex3D(VS_INPUT_3D _Input)
+{
+    VS_OUTPUT_COLOR Output = (VS_OUTPUT_COLOR) 0;
+
+    return Output;
+}
+
+
+PS_OUTPUT PS_StandardVertex3D(VS_OUTPUT_COLOR _Input)
+{
+    PS_OUTPUT Output = (PS_OUTPUT) 0;
+    return Output;
+
+}
+
+// 라이트 정보및 라이트 계산(Compute Light)함수
+
+struct LightInfo
+{
+    float4 vDifusse;
+    float4 vAmbient;
+    float4 vSpecular;
+    float4 vEmissve;
+};
+
+#define LIGHT_DIR 0
+#define LIGHT_POINT 1
+#define LIGHT_SPOT 2
+
+
+LightInfo ComputeLight(float3 _vViewPosition, float3 _vViewNormal)
+{
+    // 뷰공간에서 라이트를 계산해줄것임
+    LightInfo tInfo = (LightInfo) 0;
+
+    float3 vLightDir = float3(0.0f, 0.0f, 0.0f);
+    float fIntensity = 1.0f;                        // 빛의 강도
+
+    // 해당 조명이 Directional일 경우
+    if (g_iLightType == LIGHT_DIR)
+    {
+        // 조명방향을 뷰공간으로 변환한다.
+        // 조명방향의 역방향을 구해야한다. ( 그래야 색상값이 나옴)
+        //vLightDir = -normalize(mul(float4(g_vLightDir, 0.0f), g_V).xyz);
+        vLightDir = g_vLightDir;
+
+    }
+
+    // POINT 조명
+    if (g_iLightType == LIGHT_POINT)
+    {
+        // 정점에서 조명을 향하는 벡터를 구해주기
+        vLightDir = g_vLightPosition - _vViewPosition;
+        vLightDir = normalize(vLightDir);
+
+        // 정점(물체의 정점)과 조명간의 거리를 구해주기
+        float fDistance = distance(g_vLightPosition, _vViewPosition);
+
+        if (fDistance > g_fLightDistance)
+        {
+            // 라이트의 한계거리를 벗어날경우
+            fIntensity = 0.0f;
+        }
+        else
+        {
+            //fIntensity = 1.0f - fDistance / g_fLightDistance;
+
+            // 빛의 강도를 0.3~0.7으로 제한
+            fIntensity = (1.0f - fDistance / g_fLightDistance) * 0.7f + 0.3f;
+        }
+    }
+
+    // SPOT 조명
+    if (g_iLightType == LIGHT_SPOT)
+    {
+        // 정점에서 조명을 향하는 벡터 구하기 (뷰공간), _vViewPosition(정점, 바라보는 위치)
+        vLightDir = g_vLightPosition - _vViewPosition;
+        vLightDir = normalize(vLightDir);
+
+        // 정점과 조명간의 거리 구하기
+        float fDistance = distance(g_vLightPosition, _vViewPosition);
+
+        if(fDistance > g_fLightDistance)
+        {
+            fIntensity = 0.0f;
+        }
+        else
+        {
+            // 바깥쪽 반경 안에 들어 왔는지 판단하기
+            float3 vDir = -vLightDir;
+
+            //  vDir과 조명이 비추는 벡터를 구해서 조명의  반경 안에 들어오는지 판단하기
+            // g_vLightDir 역방향은 왜 넣었냐면 상수버퍼쪽에서 -1.0f를 곱했기때문
+            float fDot = dot(vDir, g_vLightDir);
+
+            if (fDot < g_fLightOutAngle)
+            {
+                // 바깥쪽 반경을 벗어난경우
+                fIntensity = 0.0f;
+            }
+            else if(fDot >= g_fLightInAngle)
+            {
+                // 안쪽 반경에 있는지 판단 ( 바깥쪽보다 빛의 강도가 강함 )
+                fIntensity = 1.0f;
+            }
+            else
+            {
+                //바깥쪽 반경에 있는 경우
+                fIntensity = (g_fLightInAngle - fDot) / (g_fLightInAngle - g_fLightOutAngle);
+
+            }
+
+            // 라인 부드럽게 해주기(경계부분이 너무 뚜렷하고 -ㅅ- 좀..그래서 부드럽게해줌)
+            fIntensity = fIntensity * 0.3f + 0.7f;
+
+            // 거리에 따른 빛의 감쇠
+            float fDistanceIntensity = (1.0f - fDistance / g_fLightDistance) * 0.3f + 0.7f;
+
+            // 총 감쇠
+            fIntensity *= fDistanceIntensity;
+        }
+    }
+
+    tInfo.vDifusse = g_vLightDiffuse * g_vMaterialDiffuse * max(0, dot(_vViewNormal, vLightDir)) * fIntensity;
+    tInfo.vAmbient = g_vLightAmbient * g_vMaterialAmbient;
+
+    // 반사벡터 구하기
+    // 반사벡터 r은 r = I(입사벡터, 광선이 들어오는방향) - 2(dot(n(노말벡터), I))n인데 현재 들어올때 역방향으로 ㄷ르어와서 
+    // r = 2(n내적I) - I임 
+    float3 vReflect = 2.0f * dot(_vViewNormal, vLightDir) * _vViewNormal - vLightDir;
+    vReflect = normalize(vReflect);
+
+    // View 벡터를 구한다. ( 뷰공간에서 처리할려고)
+    float3 vView = -normalize(_vViewPosition);
+
+    tInfo.vSpecular = g_vLightSpecualr * g_vMaterialSpecurlar * pow(max(0, dot(vReflect, vView)), g_vMaterialSpecurlar.w) * fIntensity;
+
+    return tInfo;
+}
+
+// 섀도우
+float SpotShadowPCF(float3 _Pos)
+{
+    // 월드 위치를 쉐도우 투영 공간에 변환
+    float4 ShadowMapPos = mul(float4(_Pos, 1.0), g_vShadowLightVP);
+
+    float3 UVD = ShadowMapPos.xyz / ShadowMapPos.w;
+
+    UVD.xy = 0.5 * UVD.xy + 0.5;
+    UVD.y = 1.0 - UVD.y;
+
+    float Depth = g_ShadowTex.Sample(g_ShadowSampler, UVD.xy).x;
+
+    Depth += 0.000001;
+
+    if (UVD.z > Depth)
+    {
+        return 0.0;
+    }
+    else
+    {
+        return 1.0;
+    }
+}
+
+LightInfo ComputeLight(float3 _vViewPosition, float3 _vViewNormal,
+            float4 _vDiffuse, float4 _vAmbient, float4 _vSpecular, float4 _vEmissive, 
+            float _fSpecularPower)
+{
+    // 뷰공간에서 라이트를 계산해줄것임
+    LightInfo tInfo = (LightInfo) 0;
+
+    float3 vLightDir = float3(0.0f, 0.0f, 0.0f);
+    float fIntensity = 1.0f; // 빛의 강도
+
+    // 해당 조명이 Directional일 경우
+    if (g_iLightType == LIGHT_DIR)
+    {
+        // 조명방향을 뷰공간으로 변환한다.
+        // 조명방향의 역방향을 구해야한다. ( 그래야 색상값이 나옴)
+        //vLightDir = -normalize(mul(float4(g_vLightDir, 0.0f), g_V).xyz);
+        vLightDir = g_vLightDir;
+
+    }
+
+    // POINT 조명
+    if (g_iLightType == LIGHT_POINT)
+    {
+        // 정점에서 조명을 향하는 벡터를 구해주기
+        vLightDir = g_vLightPosition - _vViewPosition;
+        vLightDir = normalize(vLightDir);
+
+        // 정점(물체의 정점)과 조명간의 거리를 구해주기
+        float fDistance = distance(g_vLightPosition, _vViewPosition);
+
+        if (fDistance > g_fLightDistance)
+        {
+            // 라이트의 한계거리를 벗어날경우
+            fIntensity = 0.0f;
+        }
+        else
+        {
+            //fIntensity = 1.0f - fDistance / g_fLightDistance;
+
+            // 빛의 강도를 0.3~0.7으로 제한
+            fIntensity = (1.0f - fDistance / g_fLightDistance) * 0.7f + 0.3f;
+        }
+    }
+
+    // SPOT 조명
+    if (g_iLightType == LIGHT_SPOT)
+    {
+        // 정점에서 조명을 향하는 벡터 구하기 (뷰공간), _vViewPosition(정점, 바라보는 위치)
+        vLightDir = g_vLightPosition - _vViewPosition;
+        vLightDir = normalize(vLightDir);
+
+        // 정점과 조명간의 거리 구하기
+        float fDistance = distance(g_vLightPosition, _vViewPosition);
+
+        if (fDistance > g_fLightDistance)
+        {
+            fIntensity = 0.0f;
+        }
+        else
+        {
+            // 바깥쪽 반경 안에 들어 왔는지 판단하기
+            float3 vDir = -vLightDir;
+
+            //  vDir과 조명이 비추는 벡터를 구해서 조명의  반경 안에 들어오는지 판단하기
+            // g_vLightDir 역방향은 왜 넣었냐면 상수버퍼쪽에서 -1.0f를 곱했기때문
+            float fDot = dot(vDir, g_vLightDir);
+
+            if (fDot < g_fLightOutAngle)
+            {
+                // 바깥쪽 반경을 벗어난경우
+                fIntensity = 0.0f;
+            }
+            else if (fDot >= g_fLightInAngle)
+            {
+                // 안쪽 반경에 있는지 판단 ( 바깥쪽보다 빛의 강도가 강함 )
+                fIntensity = 1.0f;
+            }
+            else
+            {
+                //바깥쪽 반경에 있는 경우
+                fIntensity = (g_fLightInAngle - fDot) / (g_fLightInAngle - g_fLightOutAngle);
+
+            }
+
+            // 라인 부드럽게 해주기(경계부분이 너무 뚜렷하고 -ㅅ- 좀..그래서 부드럽게해줌)
+            fIntensity = fIntensity * 0.3f + 0.7f;
+
+            // 거리에 따른 빛의 감쇠
+            float fDistanceIntensity = (1.0f - fDistance / g_fLightDistance) * 0.3f + 0.7f;
+
+            // 총 감쇠
+            fIntensity *= fDistanceIntensity;
+        }
+    }
+
+    // 섀도우
+    float fSahdow = 1.0f;
+    if (g_iLightType == LIGHT_DIR)
+    {
+        float3 vWorldPos = mul(float4(_vViewPosition, 1.0f), g_vInvCamView).xyz;
+        fSahdow = SpotShadowPCF(vWorldPos);
+    }
+
+    tInfo.vDifusse = g_vLightDiffuse * _vDiffuse * max(0, dot(_vViewNormal, vLightDir)) * fIntensity * fSahdow;
+    tInfo.vAmbient = g_vLightAmbient * _vAmbient * fSahdow;
+
+    // 반사벡터 구하기
+    // 반사벡터 r은 r = I(입사벡터, 광선이 들어오는방향) - 2(dot(n(노말벡터), I))n인데 현재 들어올때 역방향으로 ㄷ르어와서 
+    // r = 2(n내적I) - I임 
+    float3 vReflect = 2.0f * dot(_vViewNormal, vLightDir) * _vViewNormal - vLightDir;
+    vReflect = normalize(vReflect);
+
+    // View 벡터를 구한다. ( 뷰공간에서 처리할려고)
+    float3 vView = -normalize(_vViewPosition);
+
+    tInfo.vSpecular = g_vLightSpecualr * _vSpecular * pow(max(0, dot(vReflect, vView)), _fSpecularPower) * fIntensity * fSahdow;
+    tInfo.vEmissve = _vSpecular * _vEmissive * fSahdow;
+
+    return tInfo;
+}
+
+////////////////////////////////////// 색상 변환 ( 압축할거임, 머티리얼부분같은거 )
+
+// float4 -> flaot
+float ConvertColor(float4 _vColor)
+{
+    // 0~1사이의 값을 0~255값으로.. ( 일단 소수를 정수값으로 바꾼다. )
+    uint4 vColor = (uint4) 0;
+    vColor.r = uint(_vColor.r * 255);
+    vColor.g = uint(_vColor.g * 255);
+    vColor.b = uint(_vColor.b * 255);
+    vColor.a = uint(_vColor.a * 255);
+
+    // 그담엔 각 정수들을 uint = 4바이트에 다 넣어줄것임
+    // 각각 1바이트씩 넣어줄거임 ( 0~255값이므로 4바이트에 충분히 다 넣어줄 수 있음 )
+    // ARGB 순서
+    uint iColor = 0;
+    iColor = (uint) (vColor.a);
+    iColor = (iColor << 8) | vColor.r;
+    iColor = (iColor << 8) | vColor.g;
+    iColor = (iColor << 8) | vColor.b;
+
+    // 그냥 float으로 넣으면 오차가 발생한다.
+    // 이 오차는 ㅠㅠㅠㅠ 넘나 치명적임.. 
+    // asfloat은 오차를 발생하기 않기 위해 사용한다. (HLSL에서 제공)
+    return asfloat(iColor);
+}
+
+// float -> float4
+float4 ConvertColor(float _fColor)
+{
+    float4  vColor;
+    uint    iColor = asuint(_fColor);
+
+    // BGRA
+    vColor.b = (iColor & 0x000000ff) / 255.f;
+    vColor.g = ((iColor >> 8) & 0x000000ff) / 255.f;
+    vColor.r = ((iColor >> 16) & 0x000000ff) / 255.f;
+    vColor.a = ((iColor >> 24) & 0x000000ff) / 255.f;
+
+    return vColor;
+}
+
+
+// 애니메이션 스키닝
+
+// 애니메이션 스키닝을 위해 VTF(Vertex Texture Fatch)방식을 적용할 것이다.
+// 픽셀셰이더에선 Sample()를 통해 해당 픽셀을 가져오고
+// 버텍스셰이더에선 Load(인덱스)를 통해 해당 정점들을 가져온다. -> 5.0버전부터 사용가능
+// 텍스처를 배열처럼 생각하고 적용한다.
+
+// 스키닝 정보는 2가지방식으로 나눠 생각한다.
+// 1. 범프가 존재하는.. -> Tangent, Binormal 존재
+// 2. 범프가 적용 X     -> Tangent, Binormal X
+
+// 즉 범프를 적용하면 탄젠트와 바이노말이 존재한다.
+// 범프를 적용하지 않으면 탄젠트(U)와 바이노말(V)은 존재하지 않는다.
+// 아래는 스키이정보 구조체이다.
+struct _tagSkinning
+{
+    float3 vPos;
+    float3 vNormal;
+    float3 vTangent;
+    float3 vBinormal;
+};
+
+// 해당 정점의 본 인덱스를 넣어서 본정보들을 로드한다.
+matrix GetBoneMatrix(int _idx)
+{
+    // matBone -> Pos, Normal, Tangent, BiNormal 정보를 행렬로 갖고 있다. ( 해당 인덱스에 맞게 )
+    // Noraml을 적용하지 않을 경우, 즉 범프를 적용하지 않는 메쉬일 경우
+    // Tangent와 BiNormal이 0 이다. 
+    // 현재 텍스처에는 본행렬들의 정보가 직렬화로 되어 있다.
+    matrix matBone =
+    {
+        g_BoneTexture.Load(int3(_idx * 4, 0, 0)),               // Pos
+        g_BoneTexture.Load(int3(_idx * 4 + 1, 0, 0)),           // Normal
+        g_BoneTexture.Load(int3(_idx * 4 + 2, 0, 0)),           // Tangnet
+		g_BoneTexture.Load(int3(_idx * 4 + 3, 0, 0))            // BiNormal
+    };
+
+    return matBone;
+}
+
+_tagSkinning Skinning(float3 _vPos, float3 _vNormal, float3 _vTangnet,
+            float3 _vBiNormal, float4 vWeights, float4 _vIndices)
+{
+    _tagSkinning tSkinning = (_tagSkinning) 0;
+
+    float fWeights[4];
+    fWeights[0] = vWeights.x;
+    fWeights[1] = vWeights.y;
+    fWeights[2] = vWeights.z;
+    fWeights[3] = 1.0f - vWeights.x - vWeights.y - vWeights.z;      // 가중치는 항상 최대값이 1이기때문에 나머지값 넣어준다.
+
+    // 범프적용할 시 Tangnet,와 BiNormal 사용
+    for (int i = 0; i < 4; ++i)
+    {
+        matrix matBone = GetBoneMatrix((int) _vIndices[i]);         // 해당 인덱스에 해당하는 본정보를 가져오기
+
+        tSkinning.vPos += fWeights[i] * mul(float4(_vPos, 1.0f), matBone).xyz;
+        tSkinning.vNormal += fWeights[i] * mul(float4(_vNormal, 0.0f), matBone).xyz;
+        tSkinning.vTangent += fWeights[i] * mul(float4(_vTangnet, 0.0f), matBone).xyz;
+        tSkinning.vBinormal += fWeights[i] * mul(float4(_vBiNormal, 0.0f), matBone).xyz;
+    }
+
+    tSkinning.vNormal = normalize(tSkinning.vNormal);
+    tSkinning.vTangent = normalize(tSkinning.vTangent);
+    tSkinning.vBinormal = normalize(tSkinning.vBinormal);
+
+    return tSkinning;
+}
+
+
+_tagSkinning Skinning(float3 _vPos, float3 _vNormal,
+                         float4 vWeights, float4 _vIndices)
+{
+    _tagSkinning tSkinning = (_tagSkinning) 0;
+
+    float fWeights[4];
+    fWeights[0] = vWeights.x;
+    fWeights[1] = vWeights.y;
+    fWeights[2] = vWeights.z;
+    fWeights[3] = 1.0f - vWeights.x - vWeights.y - vWeights.z; // 가중치는 항상 최대값이 1이기때문에 나머지값 넣어준다.
+
+    // 범프를 적용안하기 때문에  Tangnet와 BiNormal을 사용하지 않는다.
+    for (int i = 0; i < 4; ++i)
+    {
+        matrix matBone = GetBoneMatrix((int) _vIndices[i]); // 해당 인덱스에 해당하는 본정보를 가져오기
+
+        tSkinning.vPos += fWeights[i] * mul(float4(_vPos, 1.0f), matBone).xyz;
+        tSkinning.vNormal += fWeights[i] * mul(float4(_vNormal, 0.0f), matBone).xyz;
+    }
+
+    tSkinning.vNormal = normalize(tSkinning.vNormal);
+
+    return tSkinning;
+}
+
+
+// 프레임 UV계산하기 -> 아틀라스인지 프레임인지 구별하고.. 프레임인경우는 그텍스처 자체가 1프레임이기때문에 그냥 사용
+float2 ComputeFrameUV(float2 _vUV)
+{
+    float2 vResult = _vUV;
+
+    // 아틀라스
+    // 전체사이즈의 비율을 계산하는거임 (아래것도)
+    if (AFT_ATLAS == g_iAniFrameType)
+    {
+        // x좌표
+        if (0.0f == _vUV.x)
+        {
+            // 처음부분 ->인덱스 0인 부분... (각부분당..)
+            vResult.x = g_vAniFrameStart.x / g_vAniFrameTextureSize.x;
+        }
+        else
+        {
+            vResult.x = g_vAniFrameEnd.x / g_vAniFrameTextureSize.x;
+        }
+
+        // y좌표
+        if (0.0f == _vUV.y)
+        {
+            vResult.y = g_vAniFrameStart.y / g_vAniFrameTextureSize.y;
+        }
+        else
+        {
+            vResult.y = g_vAniFrameEnd.y / g_vAniFrameTextureSize.y;
+        }
+    }
+
+    return vResult;
+}
+
+
+// 인스턴싱 프레임 계산
+float2 ComputeInstancingFrameUV(float2 _vUV, float2 _vStart, float2 _vEnd)
+{
+    float2 vResult = _vUV;
+
+    // 아틀라스
+    // 전체사이즈의 비율을 계산하는거임 (아래것도)
+    if (AFT_ATLAS == g_iAniFrameType)
+    {
+        // x좌표
+        if (0.0f == _vUV.x)
+        {
+            // 처음부분 ->인덱스 0인 부분... (각부분당..)
+            vResult.x = _vStart.x / g_vAniFrameTextureSize.x;
+        }
+        else
+        {
+            vResult.x = _vEnd.x / g_vAniFrameTextureSize.x;
+        }
+
+        // y좌표
+        if (0.0f == _vUV.y)
+        {
+            vResult.y = _vStart.y / g_vAniFrameTextureSize.y;
+        }
+        else
+        {
+            vResult.y = _vEnd.y / g_vAniFrameTextureSize.y;
+        }
+    }
+
+    return vResult;
+}

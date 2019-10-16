@@ -1,0 +1,376 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="소스 파일">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="헤더 파일">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="01.SceneComponent">
+      <UniqueIdentifier>{e89f774a-0f70-46b2-aa1c-297c2d57e76b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. UserComponent">
+      <UniqueIdentifier>{6c1795c2-8bf2-40db-9e8f-320cea65ac6c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.SceneComponent\01. Title">
+      <UniqueIdentifier>{1395e5b9-e313-4e24-ad1e-3b56fcae9120}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.SceneComponent\03. Play">
+      <UniqueIdentifier>{d20b228e-2427-44a5-97f7-02a2a538f6f7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.SceneComponent\04. End">
+      <UniqueIdentifier>{5d763d57-6ad8-4cb5-8b91-5aecaae65233}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. UserComponent\01. UI">
+      <UniqueIdentifier>{62a654bc-88d0-4837-85a6-7fd81433aea3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. UserComponent\01. UI\01. Bar">
+      <UniqueIdentifier>{78465890-0462-448e-b240-c008a7bae3a6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.SceneComponent\02. Load">
+      <UniqueIdentifier>{a392070e-a801-44ae-89ba-fdd261cac46c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. UserComponent\02.Character">
+      <UniqueIdentifier>{5bed131d-7f79-4607-9b38-28d75df9335c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. UserComponent\02.Character\01. Player">
+      <UniqueIdentifier>{937e8f49-4b74-4fab-993b-9b22608cfe00}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. UserComponent\02.Character\01. Player\01. Skill">
+      <UniqueIdentifier>{23ad2c75-118d-4867-a0e8-ede51232f30b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. UserComponent\02.Character\02. Enemy">
+      <UniqueIdentifier>{2c061cf0-e91e-4140-bb03-88f638a791a9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. UserComponent\02.Character\00. BaseState">
+      <UniqueIdentifier>{2e997fa8-31d6-4563-8076-4a651a965adf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. UserComponent\02.Character\02. Enemy\01.General">
+      <UniqueIdentifier>{c8a7b311-36b0-44fa-ae1f-4528f508434c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. UserComponent\02.Character\02. Enemy\01.General\01. BisqueLady">
+      <UniqueIdentifier>{8baac065-2c15-41e5-8581-b28f1046ca20}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. UserComponent\02.Character\02. Enemy\02. Boss">
+      <UniqueIdentifier>{28eede5c-68de-4fc6-9570-3ca2abe59ff2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. UserComponent\02.Character\02. Enemy\01.General\02. HookaFootman_A">
+      <UniqueIdentifier>{26019dc7-e69e-462d-8bb3-8b02d6a9d1be}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. UserComponent\02.Character\02. Enemy\01.General\03. EnchantedDoll">
+      <UniqueIdentifier>{bdea4466-61f7-44ae-8699-0b313fd301db}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.SceneComponent\05. MapTool">
+      <UniqueIdentifier>{b2f2f3c2-07ba-4511-a534-1e92650d5d06}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. UserComponent\01. UI\02. Inventory">
+      <UniqueIdentifier>{b590f787-d1ef-43e5-8919-7b634db47eac}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. UserComponent\01. UI\03. QuickSlot">
+      <UniqueIdentifier>{2ed466c3-b13c-4c3d-9986-8e8c68014955}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. UserComponent\01. UI\04. Mouse">
+      <UniqueIdentifier>{36504369-2320-4e81-90c2-d0b48cea091d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. UserComponent\01. UI\04. Mouse\01. ItemSKill">
+      <UniqueIdentifier>{7578010f-b74a-4494-aabb-065fb949b0b2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. UserComponent\01. UI\04. Mouse\02. MouseCursor">
+      <UniqueIdentifier>{faa3e5af-28fd-4be8-bb02-e304af63ff3c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. UserComponent\03. MapTool">
+      <UniqueIdentifier>{7ceb4c9e-ef1e-4283-9b34-d44e10737635}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. UserComponent\03. MapTool\01. Mover">
+      <UniqueIdentifier>{e5c32ecb-97a3-4eb8-9235-071fffb5b4ad}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. UserComponent\03. MapTool\02. UI">
+      <UniqueIdentifier>{10aeb782-7b5d-451f-b65a-7dc9f76d7110}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. UserComponent\03. MapTool\02. UI\01. Select">
+      <UniqueIdentifier>{4e13b229-b2c5-4a39-8e47-677ea6c7c8f8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. UserComponent\03. MapTool\02. UI\02. Buttons">
+      <UniqueIdentifier>{e8680cae-6cdd-4770-b046-6b20640011c9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. UserComponent\02.Character\02. Enemy\03. MovePivot">
+      <UniqueIdentifier>{a555da11-74a9-4c55-a37c-9f95fe7fca13}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. UserComponent\01. UI\01. Bar\01.BossHP">
+      <UniqueIdentifier>{ebae8a3f-4267-43f5-9a2a-964dc7858990}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. UserComponent\01. UI\05. Shop">
+      <UniqueIdentifier>{1cc551b8-d11e-4a41-b209-f7a87de5a011}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. UserComponent\01. UI\06. Dialogue">
+      <UniqueIdentifier>{a9ac7198-6f21-4b25-b590-a6d6e94d5a53}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="리소스 파일">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="02. UserComponent\02.Character\03. NPC">
+      <UniqueIdentifier>{914b5184-d2b9-4f6c-8ec5-98569ac655be}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. UserComponent\01. UI\07. Quest">
+      <UniqueIdentifier>{a62b3dd6-c12f-4cc9-b716-bd3f6455b619}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="resource.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Client.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneComponent\MainScene.h">
+      <Filter>01.SceneComponent\03. Play</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneComponent\TitleScene.h">
+      <Filter>01.SceneComponent\01. Title</Filter>
+    </ClInclude>
+    <ClInclude Include="UserComponent\Bullet.h">
+      <Filter>02. UserComponent\02.Character\01. Player\01. Skill</Filter>
+    </ClInclude>
+    <ClInclude Include="UserComponent\Player.h">
+      <Filter>02. UserComponent\02.Character\01. Player</Filter>
+    </ClInclude>
+    <ClInclude Include="UserComponent\Monster.h">
+      <Filter>02. UserComponent\02.Character\02. Enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="UserComponent\StateBar.h">
+      <Filter>02. UserComponent\01. UI\01. Bar</Filter>
+    </ClInclude>
+    <ClInclude Include="UserComponent\Weapon.h">
+      <Filter>02. UserComponent\02.Character\01. Player</Filter>
+    </ClInclude>
+    <ClInclude Include="UserComponent\Base.h">
+      <Filter>02. UserComponent\02.Character\00. BaseState</Filter>
+    </ClInclude>
+    <ClInclude Include="UserComponent\PlayerCameraPivot.h">
+      <Filter>02. UserComponent\02.Character\01. Player</Filter>
+    </ClInclude>
+    <ClInclude Include="UserComponent\BisqueLady.h">
+      <Filter>02. UserComponent\02.Character\02. Enemy\01.General\01. BisqueLady</Filter>
+    </ClInclude>
+    <ClInclude Include="UserComponent\HookaFootmanA.h">
+      <Filter>02. UserComponent\02.Character\02. Enemy\01.General\02. HookaFootman_A</Filter>
+    </ClInclude>
+    <ClInclude Include="UserComponent\EnchantedDoll.h">
+      <Filter>02. UserComponent\02.Character\02. Enemy\01.General\03. EnchantedDoll</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneComponent\MapToolScene.h">
+      <Filter>01.SceneComponent\05. MapTool</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneComponent\EndingScene.h">
+      <Filter>01.SceneComponent\04. End</Filter>
+    </ClInclude>
+    <ClInclude Include="UserComponent\Inventory.h">
+      <Filter>02. UserComponent\01. UI\02. Inventory</Filter>
+    </ClInclude>
+    <ClInclude Include="UserComponent\QuickSlot.h">
+      <Filter>02. UserComponent\01. UI\03. QuickSlot</Filter>
+    </ClInclude>
+    <ClInclude Include="UserComponent\MouseItemSkill.h">
+      <Filter>02. UserComponent\01. UI\04. Mouse\01. ItemSKill</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneComponent\MapToolInfo.h">
+      <Filter>01.SceneComponent\05. MapTool</Filter>
+    </ClInclude>
+    <ClInclude Include="UserComponent\Mover.h">
+      <Filter>02. UserComponent\03. MapTool\01. Mover</Filter>
+    </ClInclude>
+    <ClInclude Include="UserComponent\EnvSelectManager.h">
+      <Filter>02. UserComponent\03. MapTool\02. UI\01. Select</Filter>
+    </ClInclude>
+    <ClInclude Include="UserComponent\MapToolButtons.h">
+      <Filter>02. UserComponent\03. MapTool\02. UI\02. Buttons</Filter>
+    </ClInclude>
+    <ClInclude Include="UserComponent\PlayerFace.h">
+      <Filter>02. UserComponent\02.Character\01. Player</Filter>
+    </ClInclude>
+    <ClInclude Include="UserComponent\PlayerHair.h">
+      <Filter>02. UserComponent\02.Character\01. Player</Filter>
+    </ClInclude>
+    <ClInclude Include="UserComponent\BossMonster.h">
+      <Filter>02. UserComponent\02.Character\02. Enemy\02. Boss</Filter>
+    </ClInclude>
+    <ClInclude Include="UserComponent\MovePivot.h">
+      <Filter>02. UserComponent\02.Character\02. Enemy\03. MovePivot</Filter>
+    </ClInclude>
+    <ClInclude Include="UserComponent\BossUIState.h">
+      <Filter>02. UserComponent\01. UI\01. Bar\01.BossHP</Filter>
+    </ClInclude>
+    <ClInclude Include="UserComponent\ShopManager.h">
+      <Filter>02. UserComponent\01. UI\05. Shop</Filter>
+    </ClInclude>
+    <ClInclude Include="UserComponent\DialogueManager.h">
+      <Filter>02. UserComponent\01. UI\06. Dialogue</Filter>
+    </ClInclude>
+    <ClInclude Include="UserComponent\PivotHitCol.h">
+      <Filter>02. UserComponent\02.Character\01. Player</Filter>
+    </ClInclude>
+    <ClInclude Include="UserComponent\ShopNPC.h">
+      <Filter>02. UserComponent\02.Character\03. NPC</Filter>
+    </ClInclude>
+    <ClInclude Include="UserComponent\PoporiBoyNPC.h">
+      <Filter>02. UserComponent\02.Character\03. NPC</Filter>
+    </ClInclude>
+    <ClInclude Include="UserComponent\GoddessNPC.h">
+      <Filter>02. UserComponent\02.Character\03. NPC</Filter>
+    </ClInclude>
+    <ClInclude Include="UserComponent\NPCTalkBtManager.h">
+      <Filter>02. UserComponent\01. UI\06. Dialogue</Filter>
+    </ClInclude>
+    <ClInclude Include="UserComponent\PasserbyNPC.h">
+      <Filter>02. UserComponent\02.Character\03. NPC</Filter>
+    </ClInclude>
+    <ClInclude Include="UserComponent\QuestManager.h">
+      <Filter>02. UserComponent\01. UI\07. Quest</Filter>
+    </ClInclude>
+    <ClInclude Include="UserComponent\QuestAngelStatue.h">
+      <Filter>02. UserComponent\02.Character\03. NPC</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Client.rc">
+      <Filter>리소스 파일</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="icon1.ico">
+      <Filter>리소스 파일</Filter>
+    </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="main.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="SceneComponent\MainScene.cpp">
+      <Filter>01.SceneComponent\03. Play</Filter>
+    </ClCompile>
+    <ClCompile Include="SceneComponent\TitleScene.cpp">
+      <Filter>01.SceneComponent\01. Title</Filter>
+    </ClCompile>
+    <ClCompile Include="UserComponent\Bullet.cpp">
+      <Filter>02. UserComponent\02.Character\01. Player\01. Skill</Filter>
+    </ClCompile>
+    <ClCompile Include="UserComponent\Player.cpp">
+      <Filter>02. UserComponent\02.Character\01. Player</Filter>
+    </ClCompile>
+    <ClCompile Include="UserComponent\Monster.cpp">
+      <Filter>02. UserComponent\02.Character\02. Enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="UserComponent\StateBar.cpp">
+      <Filter>02. UserComponent\01. UI\01. Bar</Filter>
+    </ClCompile>
+    <ClCompile Include="UserComponent\Weapon.cpp">
+      <Filter>02. UserComponent\02.Character\01. Player</Filter>
+    </ClCompile>
+    <ClCompile Include="UserComponent\Base.cpp">
+      <Filter>02. UserComponent\02.Character\00. BaseState</Filter>
+    </ClCompile>
+    <ClCompile Include="UserComponent\PlayerState.cpp">
+      <Filter>02. UserComponent\02.Character\01. Player</Filter>
+    </ClCompile>
+    <ClCompile Include="UserComponent\PlayerStateChange.cpp">
+      <Filter>02. UserComponent\02.Character\01. Player</Filter>
+    </ClCompile>
+    <ClCompile Include="UserComponent\PlayerCameraPivot.cpp">
+      <Filter>02. UserComponent\02.Character\01. Player</Filter>
+    </ClCompile>
+    <ClCompile Include="UserComponent\BisqueLady.cpp">
+      <Filter>02. UserComponent\02.Character\02. Enemy\01.General\01. BisqueLady</Filter>
+    </ClCompile>
+    <ClCompile Include="UserComponent\HookaFootmanA.cpp">
+      <Filter>02. UserComponent\02.Character\02. Enemy\01.General\02. HookaFootman_A</Filter>
+    </ClCompile>
+    <ClCompile Include="UserComponent\EnchantedDoll.cpp">
+      <Filter>02. UserComponent\02.Character\02. Enemy\01.General\03. EnchantedDoll</Filter>
+    </ClCompile>
+    <ClCompile Include="SceneComponent\MapToolScene.cpp">
+      <Filter>01.SceneComponent\05. MapTool</Filter>
+    </ClCompile>
+    <ClCompile Include="SceneComponent\EndingScene.cpp">
+      <Filter>01.SceneComponent\04. End</Filter>
+    </ClCompile>
+    <ClCompile Include="UserComponent\Inventory.cpp">
+      <Filter>02. UserComponent\01. UI\02. Inventory</Filter>
+    </ClCompile>
+    <ClCompile Include="UserComponent\QuickSlot.cpp">
+      <Filter>02. UserComponent\01. UI\03. QuickSlot</Filter>
+    </ClCompile>
+    <ClCompile Include="UserComponent\MouseItemSkill.cpp">
+      <Filter>02. UserComponent\01. UI\04. Mouse\01. ItemSKill</Filter>
+    </ClCompile>
+    <ClCompile Include="SceneComponent\MapToolInfo.cpp">
+      <Filter>01.SceneComponent\05. MapTool</Filter>
+    </ClCompile>
+    <ClCompile Include="UserComponent\Mover.cpp">
+      <Filter>02. UserComponent\03. MapTool\01. Mover</Filter>
+    </ClCompile>
+    <ClCompile Include="UserComponent\EnvSelectManager.cpp">
+      <Filter>02. UserComponent\03. MapTool\02. UI\01. Select</Filter>
+    </ClCompile>
+    <ClCompile Include="UserComponent\MapToolButtons.cpp">
+      <Filter>02. UserComponent\03. MapTool\02. UI\02. Buttons</Filter>
+    </ClCompile>
+    <ClCompile Include="SceneComponent\MapToolSceneProtoType.cpp">
+      <Filter>01.SceneComponent\05. MapTool</Filter>
+    </ClCompile>
+    <ClCompile Include="SceneComponent\MainSceneProtoType.cpp">
+      <Filter>01.SceneComponent\03. Play</Filter>
+    </ClCompile>
+    <ClCompile Include="UserComponent\PlayerFace.cpp">
+      <Filter>02. UserComponent\02.Character\01. Player</Filter>
+    </ClCompile>
+    <ClCompile Include="UserComponent\PlayerHair.cpp">
+      <Filter>02. UserComponent\02.Character\01. Player</Filter>
+    </ClCompile>
+    <ClCompile Include="UserComponent\BossMonster.cpp">
+      <Filter>02. UserComponent\02.Character\02. Enemy\02. Boss</Filter>
+    </ClCompile>
+    <ClCompile Include="UserComponent\MovePivot.cpp">
+      <Filter>02. UserComponent\02.Character\02. Enemy\03. MovePivot</Filter>
+    </ClCompile>
+    <ClCompile Include="UserComponent\BossUIState.cpp">
+      <Filter>02. UserComponent\01. UI\01. Bar\01.BossHP</Filter>
+    </ClCompile>
+    <ClCompile Include="UserComponent\ShopManager.cpp">
+      <Filter>02. UserComponent\01. UI\05. Shop</Filter>
+    </ClCompile>
+    <ClCompile Include="UserComponent\DialogueManager.cpp">
+      <Filter>02. UserComponent\01. UI\06. Dialogue</Filter>
+    </ClCompile>
+    <ClCompile Include="UserComponent\BossMotherState.cpp">
+      <Filter>02. UserComponent\02.Character\02. Enemy\02. Boss</Filter>
+    </ClCompile>
+    <ClCompile Include="UserComponent\PivotHitCol.cpp">
+      <Filter>02. UserComponent\02.Character\01. Player</Filter>
+    </ClCompile>
+    <ClCompile Include="UserComponent\ShopNPC.cpp">
+      <Filter>02. UserComponent\02.Character\03. NPC</Filter>
+    </ClCompile>
+    <ClCompile Include="UserComponent\PoporiBoyNPC.cpp">
+      <Filter>02. UserComponent\02.Character\03. NPC</Filter>
+    </ClCompile>
+    <ClCompile Include="UserComponent\GoddessNPC.cpp">
+      <Filter>02. UserComponent\02.Character\03. NPC</Filter>
+    </ClCompile>
+    <ClCompile Include="UserComponent\NPCTalkBtManager.cpp">
+      <Filter>02. UserComponent\01. UI\06. Dialogue</Filter>
+    </ClCompile>
+    <ClCompile Include="UserComponent\PasserbyNPC.cpp">
+      <Filter>02. UserComponent\02.Character\03. NPC</Filter>
+    </ClCompile>
+    <ClCompile Include="UserComponent\QuestManager.cpp">
+      <Filter>02. UserComponent\01. UI\07. Quest</Filter>
+    </ClCompile>
+    <ClCompile Include="UserComponent\QuestAngelStatue.cpp">
+      <Filter>02. UserComponent\02.Character\03. NPC</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>
